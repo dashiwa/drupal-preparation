@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Docker</title>
+    <title>Docker: часть 1 – введение, установка и запуск</title>
 
 
     <!-- Bootstrap core CSS -->
@@ -30,21 +30,101 @@
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
             </p>
             <div class="jumbotron">
-                <h1>DOCKER[1] - основы докера</h1>
+                <h1>DOCKER[1] - основы докера : часть 1 – введение, установка и запуск</h1>
+
+
+                Docker – система виртуализации, позволяющая запускать изолированные среды исполнения в рамках одной операционной системы.
+
+                Для реализации – используется система <strong>LXC (Linux Containers)</strong>, аналог jails во FreeBSD.
 
 
                 Контейнеры и образы Docker
-
                 Система, которая запускается Docker-ом, называется “контейнером“, а команда запуска состоит из трёх частей:
+                <img src="/static/images/container_explainer.png">
 
-                Контейнер – это собственно сама “операционная система”, запущенная Docker-ом. Образ (image) – файл, представляющий собой эту операционную систему со всем необходимым набором ПО.
+
+                <strong>Контейнер</strong> – это собственно сама “операционная система”, запущенная Docker-ом.
+                <strong>Образ (image)</strong> – файл, представляющий собой эту операционную систему со всем необходимым набором ПО.
+
 
                 При выполнении команды  docker run hello-world – выполняются следующие действия:
 
-                проверяется, если ли образ hello-world в локальном хранилище;
-                если он не найден – то выполняется поиск и загрузка указанного образа с Docker Hub, который является общедоступным хранилищем образов;
-                образ загружается на машину с Docker и запускается.
+                <ul>
+                    <li>проверяется, если ли образ hello-world в локальном хранилище;</li>
+                    <li>если он не найден – то выполняется поиск и загрузка указанного образа с Docker Hub, который является общедоступным хранилищем образов;</li>
+                    <li>образ загружается на машину с Docker и запускается.</li>
+                </ul>
+
+                Пример. - запустим контейнер с Debian Wheezy.
+
+                С помощью опций -i (interactive) и -t (pseudo-TTY) – откроем на него консоль, а с помощью --rm – укажем на необходимость удалить контейнер после завершения работы с ним:
+
+                <span>docker run -it --rm debian:wheezy</span>
+            <br />
+
+                <button type="button" class="btn btn-primary">Команды</button>
+                <br />
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+
+
+                <p>Для проверки уже имеющихся образов – на хост-машине выполните:</p>
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> docker images</span></p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        # docker images<br/>
+                          REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE<br/>
+                          debian              wheezy              19de96c112fc        2 weeks ago         84.92 MB<br/>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <p>Проверить запущенные контейнеры можно так:</p>
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps" aria-expanded="false" aria-controls="dockerps"> docker ps</span></p>
+                <div class="collapse" id="dockerps">
+                    <div class="card card-body">
+                        # docker ps<br/>
+                        CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES<br/>
+                        c3e506110ca3        debian:wheezy       "/bin/bash"         About a minute ago   Up About a minute                       lonely_meitner<br/>
+                    </div>
+                </div>
+
+                &nbsp;
+                &nbsp;
+                <p>Проверить все контейнеры, в том числе отключенные:</p>
+                &nbsp;
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerpsa" aria-expanded="false" aria-controls="dockerps"> docker ps -a
+</span></p>
+                <div class="collapse" id="dockerpsa">
+                    <div class="card card-body">
+                        # docker ps -a<br/>
+                        CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES<br/>
+                        c3e506110ca3        debian:wheezy       "/bin/bash"         About a minute ago   Up About a minute                       lonely_meitner                       lonely_meitner<br/>
+                    </div>
+                </div>
+                &nbsp;
+                &nbsp;
+                <p>Удалить локальную копию образа можно так:</p>
+                &nbsp;
+                &nbsp;
+
+
             </div>
+
+
+
+
+
             <div class="row">
                 <div class="col-6 col-lg-4">
                     <h2>Task d[1][dth][1]</h2>
