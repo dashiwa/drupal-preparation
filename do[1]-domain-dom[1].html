@@ -134,7 +134,39 @@
 
                     Можно использовать как полный ID – так и только первые три символа.</p>
 
+                &nbsp;
+                &nbsp;
+                <p>Удалить все образы и контейнеры:</p>
+                &nbsp;
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerdell" aria-expanded="false" aria-controls="dockerps"> docker rm $(docker ps -a -q)</span></p>
+                &nbsp;
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerdell" aria-expanded="false" aria-controls="dockerps"> docker rmi $(docker images -q)</span></p>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                <div class="collapse" id="dockerdell">
+                    <div class="card card-body">
+                        #!/bin/bash<br />
+                        # Delete all containers<br />
+                        docker rm $(docker ps -a -q)<br />
+                        # Delete all images<br />
+                        docker rmi $(docker images -q)<br />
+                    </div>
+                </div>
+
+
             </div>
+
+
+
+
+
+
+
+
 
 
 
@@ -145,8 +177,8 @@
                     <h2>Task d[1][dth][1]</h2>
                     <p>
                     <ul>
-                        <li>Запустить контейнер busybox</li>
-                        <li>Read documentation</li>
+                        <li>Load busybox image</li>
+                        <li>Run "busybox" image</li>
                         <li>Create plan</li>
                         <li>Feedback</li>
                     </ul>
