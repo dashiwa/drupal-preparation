@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Docker: часть 1 – введение, установка и запуск</title>
+    <title>Docker: часть 1 – введение, запуск удаление и проброс портов</title>
 
 
     <!-- Bootstrap core CSS -->
@@ -33,21 +33,33 @@
                 <h1>DOCKER[1] - основы докера : часть 1 – введение, установка и запуск</h1>
 
 
-                Docker – система виртуализации, позволяющая запускать изолированные среды исполнения в рамках одной операционной системы.
+                <p>Docker – система виртуализации, позволяющая запускать изолированные среды исполнения в рамках одной операционной системы.
 
-                Для реализации – используется система <strong>LXC (Linux Containers)</strong>, аналог jails во FreeBSD.
+                    Для реализации – используется система <strong>LXC (Linux Containers)</strong>, аналог jails во FreeBSD.</p>
 
 
-                Контейнеры и образы Docker
-                Система, которая запускается Docker-ом, называется “контейнером“, а команда запуска состоит из трёх частей:
+                <p>Контейнеры и образы Docker
+                    Система, которая запускается Docker-ом, называется “контейнером“, а команда запуска состоит из трёх частей:</p>
+            <br />
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
                 <img src="/static/images/container_explainer.png">
-
-
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+            <br/><br/><br/>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
                 <strong>Контейнер</strong> – это собственно сама “операционная система”, запущенная Docker-ом.
                 <strong>Образ (image)</strong> – файл, представляющий собой эту операционную систему со всем необходимым набором ПО.
 
 
-                При выполнении команды  docker run hello-world – выполняются следующие действия:
+                При выполнении команды  docker run hello-world – выполняются следующие действия:<br/><br/>
 
                 <ul>
                     <li>проверяется, если ли образ hello-world в локальном хранилище;</li>
@@ -55,11 +67,11 @@
                     <li>образ загружается на машину с Docker и запускается.</li>
                 </ul>
 
-                Пример. - запустим контейнер с Debian Wheezy.
+                Пример. - запустим контейнер с Debian Wheezy.<br/><br/>
 
                 С помощью опций -i (interactive) и -t (pseudo-TTY) – откроем на него консоль, а с помощью --rm – укажем на необходимость удалить контейнер после завершения работы с ним:
 
-                <span>docker run -it --rm debian:wheezy</span>
+                <span>docker run -it --rm debian:wheezy</span><br/><br/>
             <br />
 
                 <button type="button" class="btn btn-primary">Команды</button>
@@ -158,6 +170,120 @@
                 </div>
 
 
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+
+                <h2>Сеть и Docker</h2>
+
+                <p>По умолчанию – Docker запускает контейнеры в аналоге <a href="https://ru.wikipedia.org/wiki/NAT">NAT</a> – контейтеры “видят” интернет, но к ним самим подключиться нельзя.</p>
+
+                <p>Однако при запуске контейнера – ему можно указать переадресацию портов.<br />Например</p>
+
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat" aria-expanded="false" aria-controls="dockerps"># docker run -p 127.0.0.1:2222:22 -ti debian:wheezy</span></p>
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatps" aria-expanded="false" aria-controls="dockerps"># # docker ps</span></p>
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatnetstat" aria-expanded="false" aria-controls="dockerps">#  netstat -anp | grep 2222</span></p>
+                &nbsp;
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernattelnet" aria-expanded="false" aria-controls="dockerps">#  telnet localhost 2222</span></p>
+
+                <div class="collapse" id="dockernat">
+                    <div class="card card-body">
+                        WARNING: Your kernel does not support memory swappiness capabilities, memory swappiness discarded.<br />
+                        root@091cafd860bc:/#<br />
+                    </div>
+                </div>
+
+
+                <div class="collapse" id="dockernatps">
+                    <div class="card card-body">
+                        # docker ps<br />
+                        CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES<br />
+                        00d472641904        debian:wheezy       "/bin/bash"         3 seconds ago       Up 2 seconds        127.0.0.1:2222->22/tcp   jolly_poincare<br />
+                    </div>
+                </div>
+
+
+                <div class="collapse" id="dockernatnetstat">
+                    <div class="card card-body">
+                        # netstat -anp | grep 2222<br />
+                        tcp        0      0 127.0.0.1:2222          0.0.0.0:*               LISTEN      8031/docker-proxy<br />
+                    </div>
+                </div>
+
+
+                <div class="collapse" id="dockernattelnet">
+                    <div class="card card-body">
+                        # telnet localhost 2222<br />
+                        Trying ::1...<br />
+                        Trying 127.0.0.1...<br />
+                        Connected to localhost.<br />
+                        Escape character is '^]'.<br />
+                        Connection closed by foreign host.<br />
+                    </div>
+                </div>
+
+
+
+
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatall" aria-expanded="false" aria-controls="dockerps">В контейнере – устанавливаем необъходимые пакеты и добавляем ключ:</span></p>
+
+
+                <div class="collapse" id="dockernatall">
+                    <div class="card card-body">
+                        # apt-get update<br />
+                        # apt-get install vim<br />
+                        # apt-get install openssh-server<br />
+                        # service ssh start<br />
+                        [ ok ] Starting OpenBSD Secure Shell server: sshd.<br />
+                        # cd /root/<br />
+                        # mkdir .ssh && chmod 700 .ssh<br />
+                        # vim .ssh/authorized_keys<br />
+                        # cat .ssh/authorized_keys<br />
+                        ssh-rsa AAAAB3NzaC1yc2EAAAA***kS304IZ root@debian<br />
+                    </div>
+                </div>
+
+                &nbsp;
+
+                <p>И пробуем подключиться с хоста:</p>
+
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatalls" aria-expanded="false" aria-controls="dockerps">ssh -i /root/.ssh/root_docker_1 root@localhost -p 2222
+</span></p>
+
+                <div class="collapse" id="dockernatalls">
+                    <div class="card card-body">
+                        # ssh -i /root/.ssh/root_docker_1 root@localhost -p 2222<br />
+                        The authenticity of host '[localhost]:2222 ([127.0.0.1]:2222)' can't be established.<br />
+                        ECDSA key fingerprint is 7e:e9:d5:f0:a3:38:91:45:18:6a:ec:29:a3:b1:46:62.<br />
+                        Are you sure you want to continue connecting (yes/no)? yes<br />
+                        Warning: Permanently added '[localhost]:2222' (ECDSA) to the list of known hosts.<br />
+                        Linux nameless 4.0.9-gentoo #2 SMP Mon Jul 27 14:48:24 PDT 2015 x86_64<br />
+
+                        The programs included with the Debian GNU/Linux system are free software;<br />
+                        the exact distribution terms for each program are described in the<br />
+                        individual files in /usr/share/doc/*/copyright.<br />
+
+                        Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent<br />
+                        permitted by applicable law.<br />
+                        root@b252450a4d4e:~#<br />
+                    </div>
+                </div>
+
             </div>
 
 
@@ -177,10 +303,10 @@
                     <h2>Task d[1][dth][1]</h2>
                     <p>
                     <ul>
-                        <li>Load busybox image</li>
-                        <li>Run "busybox" image</li>
-                        <li>Create plan</li>
-                        <li>Feedback</li>
+                        <li>Load "example" image</li>
+                        <li>Run "example" image</li>
+                        <li>Delete "example" image</li>
+                        <li>Forward the ports for the container</li>
                     </ul>
                     </p>
 
@@ -225,7 +351,7 @@
 
         <div class="jumbotron">
             <h1>Documents and related links</h1>
-
+            <a href="https://habrahabr.ru/post/310460/">Полное практическое руководство по Docker: с нуля до кластера на AWS</a>
         </div>
 
     </div><!--/row-->
