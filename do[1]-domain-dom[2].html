@@ -203,71 +203,262 @@
                 <p>Что бы сохранить состояние контейнера – выполняем:</p>
 
 
-
-
-
-
-                &nbsp;
                 &nbsp;
                 &nbsp;
                 &nbsp;
                 &nbsp;
                 &nbsp;
 
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatall" aria-expanded="false" aria-controls="dockerps">В контейнере – устанавливаем необъходимые пакеты и добавляем ключ:</span></p>
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatall" aria-expanded="false" aria-controls="dockerps">docker commit cd8cc357e1c3 centos_with_vim</span></p>
 
 
                 <div class="collapse" id="dockernatall">
                     <div class="card card-body">
-                        # apt-get update<br />
-                        # apt-get install vim<br />
-                        # apt-get install openssh-server<br />
-                        # service ssh start<br />
-                        [ ok ] Starting OpenBSD Secure Shell server: sshd.<br />
-                        # cd /root/<br />
-                        # mkdir .ssh && chmod 700 .ssh<br />
-                        # vim .ssh/authorized_keys<br />
-                        # cat .ssh/authorized_keys<br />
-                        ssh-rsa AAAAB3NzaC1yc2EAAAA***kS304IZ root@debian<br />
+                        # docker commit cd8cc357e1c3 centos_with_vim<br />
+                        656188e54ccedc2fa26e353ced56a8ccb5be41fbc59e7f959c1407f99458023f<br />
                     </div>
                 </div>
 
                 &nbsp;
 
-                <p>И пробуем подключиться с хоста:</p>
+                <p>Где cd8cc357e1c3 – ID контейнера, а centos_with_vim – имя, под которым мы хотим его потом использовать:</p>
 
                 &nbsp;
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatalls" aria-expanded="false" aria-controls="dockerps">ssh -i /root/.ssh/root_docker_1 root@localhost -p 2222
-</span></p>
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernatalls" aria-expanded="false" aria-controls="dockerps">docker images | grep centos</span></p>
 
                 <div class="collapse" id="dockernatalls">
                     <div class="card card-body">
-                        # ssh -i /root/.ssh/root_docker_1 root@localhost -p 2222<br />
-                        The authenticity of host '[localhost]:2222 ([127.0.0.1]:2222)' can't be established.<br />
-                        ECDSA key fingerprint is 7e:e9:d5:f0:a3:38:91:45:18:6a:ec:29:a3:b1:46:62.<br />
-                        Are you sure you want to continue connecting (yes/no)? yes<br />
-                        Warning: Permanently added '[localhost]:2222' (ECDSA) to the list of known hosts.<br />
-                        Linux nameless 4.0.9-gentoo #2 SMP Mon Jul 27 14:48:24 PDT 2015 x86_64<br />
-
-                        The programs included with the Debian GNU/Linux system are free software;<br />
-                        the exact distribution terms for each program are described in the<br />
-                        individual files in /usr/share/doc/*/copyright.<br />
-
-                        Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent<br />
-                        permitted by applicable law.<br />
-                        root@b252450a4d4e:~#<br />
+                        # docker images | grep centos<br />
+                        centos_with_vim     latest              656188e54cce        52 seconds ago      298.2 MB<br />
+                        centos              latest              0f73ae75014f        3 weeks ago         172.3 MB<br />
                     </div>
                 </div>
 
+
+                <p>Запускаем его:</p>
+
+
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat1" aria-expanded="false" aria-controls="dockerps">docker run -ti --rm centos_with_vim
+</span></p>
+
+                <div class="collapse" id="dockernat1">
+                    <div class="card card-body">
+                        # docker run -ti --rm centos_with_vim<br />
+                        ...
+                        [root@cbe40ad5ccdd /]# vim --version<br />
+                        VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Jun 10 2014 06:55:55)<br />
+                    </div>
+                </div>
+
+
+                <p>Другой вариант запустить контейнер и выполнить в нём команду – указать её после имени образа, который будет запущен:</p>
+
+
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat2" aria-expanded="false" aria-controls="dockerps">docker run -ti --rm centos_with_vim vim --version</span></p>
+
+                <div class="collapse" id="dockernat2">
+                    <div class="card card-body">
+                        # docker run -ti --rm centos_with_vim vim --version<br/>
+                        VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Jun 10 2014 06:55:55)<br/>
+                    </div>
+                </div>
+
+
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <p>Docker save и export – сохранение контейнера или образа</p>
+
+                <p>Кратко о разнице между save и export:</p>
+
+                <p>save – создаёт копию гостевой операционной системы, аналог ISO-образа;</p>
+                <p>export – создаёт копию контейнера.</p>
+
+                <h2>Пример Docker save</h2>
+
+                <p>Находим необходимый нам образ:</p>
+
+
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat3" aria-expanded="false" aria-controls="dockerps"># docker images | grep vim</span></p>
+
+                <div class="collapse" id="dockernat3">
+                    <div class="card card-body">                        # docker images | grep vim<br/>
+                        centos_with_vim     latest              656188e54cce        37 minutes ago      298.2 MB<br/>
+                    </div>
+                </div>
+
+                <p>Создаём его копию:</p>
+
+                <strong>docker save centos_with_vim > /home/setevoy/centos_with_vim.tar</strong>
+
+
+                &nbsp;&nbsp;&nbsp;<br /><br /><br />
+                <p>Проверяем имеющиеся образы:</p>
+
+
+                &nbsp;&nbsp;&nbsp;
+
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat4" aria-expanded="false" aria-controls="dockerps"># docker images
+</span></p>
+
+                <div class="collapse" id="dockernat4">
+                    <div class="card card-body"># docker images<br />
+                        REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE<br/>
+                    </div>
+                </div>
+
+                <p>А теперь добавляем образ из созданной копии с помощью load:</p>
+
+                <br />
+                <strong># docker load < /home/setevoy/centos_with_vim.tar</strong>
+                &nbsp;&nbsp;&nbsp;
+                <br />
+                <br />
+                <p>Проверяем:</p>
+                &nbsp;&nbsp;&nbsp;
+
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat5" aria-expanded="false" aria-controls="dockerps"># docker images
+</span></p>
+
+                <div class="collapse" id="dockernat5">
+                    <div class="card card-body"># docker images<br />
+                        REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE<br />
+                        centos_with_vim     latest              656188e54cce        57 minutes ago      298.2 MB<br />
+                    </div>
+                </div>
+
+
+                <p>Запускаем</p>
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat6" aria-expanded="false" aria-controls="dockerps"># docker run -ti --rm centos_with_vim vim --version
+</span></p>
+
+                <div class="collapse" id="dockernat6">
+                    <div class="card card-body"># docker images<br />
+                        # docker run -ti --rm centos_with_vim vim --version<br />
+                        VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Jun 10 2014 06:55:55)
+                        ...<br />
+                    </div>
+                </div>
+
+
+
+
+                <h2>Пример Docker export</h2>
+
+                <p>На первом Docker-хосте находим ID нужного контейнера:</p>
+
+
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat7" aria-expanded="false" aria-controls="dockerps"># docker ps</span></p>
+
+                <div class="collapse" id="dockernat7">
+                    <div class="card card-body"># docker images<br />
+                        # docker ps
+                        CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                    NAMES<br />
+                        cd8cc357e1c3        centos              "/bin/bash"         About an hour ago   Up About an hour                             ecstatic_jones<br />
+                    </div>
+                </div>
+
+
+
+                <p>Експортируем его:</p>
+                <strong># docker export cd8cc357e1c3 > /home/setevoy/centos_with_vim_export</strong>
+
+
+                <p>Проверяем:</p>
+
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat8" aria-expanded="false" aria-controls="dockerps"># tar tf /home/setevoy/centos_with_vim_export.tar  | head</span></p>
+
+                <div class="collapse" id="dockernat8">
+                    <div class="card card-body"># # tar tf /home/setevoy/centos_with_vim_export.tar  | head<br />
+                        .dockerenv<br />
+                        .dockerinit<br />
+                        bin<br />
+                        dev/<br />
+                        dev/console<br />
+                        dev/pts/<br />
+                        dev/shm/<br />
+                        etc/<br />
+                        etc/.pwd.lock<br />
+                        etc/BUILDTIME<br />
+                        ...<br />
+                       _
+                    </div>
+                </div>
+
+
+                <br /><br /><br />
+                &nbsp;&nbsp;&nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat9" aria-expanded="false" aria-controls="dockerps">ls -lh /home/setevoy/ | grep cent
+</span></p>
+
+                <div class="collapse" id="dockernat9">
+                    <div class="card card-body"> # ls -lh /home/setevoy/ | grep cent<br />
+                        -rw-r--r-- 1 root root 280M Sep 29 05:14 centos_with_vim_export.tar<br />
+                        -rw-r--r-- 1 root root 295M Sep 29 04:52 centos_with_vim.tar<br />
+                        _
+                    </div>
+                </div>
+
+
+                <p>Копируем его на тот же удалённый хост со вторым Docker, и пробуем там запустить:</p>
+
+
+                <br /><br /><br />
+                &nbsp;&nbsp;&nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat10" aria-expanded="false" aria-controls="dockerps">cat /home/setevoy/centos_with_vim_export.tar | docker import - centos_with_vim_export:exported
+</span></p>
+
+                <div class="collapse" id="dockernat10">
+                    <div class="card card-body"> cat /home/setevoy/centos_with_vim_export.tar | docker import - centos_with_vim_export:exported
+                        12b806f347a44cdf864f2518010ca5b1ef05a2894f04a5ddfe1545949c4df7d0<br />
+                        _
+                    </div>
+                </div>
+
+
+                <br /><br /><br />
+                &nbsp;&nbsp;&nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat11" aria-expanded="false" aria-controls="dockerps">docker images
+
+</span></p>
+
+                <div class="collapse" id="dockernat11">
+                    <div class="card card-body"> # docker images
+                        REPOSITORY               TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+                        centos_with_vim_export   exported            12b806f347a4        8 seconds ago       282 MB
+                        centos_with_vim          latest              656188e54cce        About an hour ago   298.2 MB
+                        _
+                    </div>
+                </div>
+
+
+                <p>Пробуем его запустить:</p>
+
+                <br /><br /><br />
+                &nbsp;&nbsp;&nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat12" aria-expanded="false" aria-controls="dockerps">docker run --rm centos_with_vim_export:exported vim --version
+
+
+</span></p>
+
+                <div class="collapse" id="dockernat12">
+                    <div class="card card-body"> # docker run --rm centos_with_vim_export:exported vim --version<br/>
+                        VIM - Vi IMproved 7.4 (2013 Aug 10, compiled Jun 10 2014 06:55:55)<br/>
+                        _
+                    </div>
+                </div>
+
+
+
+
+
             </div>
-
-
-
-
-
-
-
-
 
 
 
