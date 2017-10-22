@@ -148,8 +148,9 @@
 
                 &nbsp;
                 &nbsp;
-                <p>Удалить все образы и контейнеры:</p>
+                <p>Остановить и удалить все образы и контейнеры:</p>
                 &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerdell" aria-expanded="false" aria-controls="dockerps"> docker stop $(docker ps -a -q)</span></p>
                 &nbsp;
                 <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerdell" aria-expanded="false" aria-controls="dockerps"> docker rm $(docker ps -a -q)</span></p>
                 &nbsp;
@@ -162,6 +163,8 @@
                 <div class="collapse" id="dockerdell">
                     <div class="card card-body">
                         #!/bin/bash<br />
+                        #Stop all containers<br />
+                        docker stop $(docker ps -a -q)<br/>
                         # Delete all containers<br />
                         docker rm $(docker ps -a -q)<br />
                         # Delete all images<br />
@@ -340,9 +343,12 @@
 
 
 
-                <a href="do[1]-domain-dom[1].html" class="list-group-item active">Основы Docker</a>
+                <a href="do[1]-domain-dom[1].html" class="list-group-item active">DOCKER[1] - основы докера : часть 1 – введение, установка и запуск</a>
+                <a href="do[1]-domain-dom[2].html" class="list-group-item">Docker: часть 2 – управление контейнерами</a>
+                <a href="do[1]-domain-dom[3].html" class="list-group-item">Docker: изменить рабочую директорию</a>
+                <a href="#" class="list-group-item">Основы сети в Docker</a>
                 <a href="#" class="list-group-item">Процесс сборки образов</a>
-                <a href="do[1]-domain-dom[2].html" class="list-group-item">Контейнеризация приложений</a>
+                <a href="#" class="list-group-item">Контейнеризация приложений</a>
                 <a href="#" class="list-group-item">Основы сети в Docker</a>
 
 
