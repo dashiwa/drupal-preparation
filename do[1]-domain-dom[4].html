@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>Docker: Создаем Dockerfile</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="offcanvas.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+
+<div class="container">
+
+    <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-12 col-md-9">
+            <p class="float-right d-md-none">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+            </p>
+            <div class="jumbotron">
+                <h1>Docker: Создаем Dockerfile</h1>
+
+                <br />
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                <p><strong>Dockerfile</strong> Создайте пустой каталог.
+                Измените каталоги ( cd) в новый каталог,
+                создайте файл с именем <strong>Dockerfile</strong>,
+                скопируйте и вставьте следующий контент в этот файл и сохраните его.
+                Обратите внимание на комментарии,
+                которые объясняют каждое утверждение в вашем новом файле <strong>Docker</strong>.</p>
+
+                &nbsp;
+                &nbsp;
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapseExample">Dockerfile</span></p>
+                <div class="collapse" id="collapse1">
+                    <div class="card card-body">
+                        # Use an official Python runtime as a parent image<br />
+                        FROM python:2.7-slim<br />
+
+                        # Set the working directory to /app<br />
+                        WORKDIR /app<br />
+
+                        # Copy the current directory contents into the container at /app<br />
+                        ADD . /app<br />
+
+                        # Install any needed packages specified in requirements.txt<br />
+                        RUN pip install -r requirements.txt<br />
+
+                        # Make port 80 available to the world outside this container<br />
+                        EXPOSE 80<br />
+
+                        # Define environment variable<br />
+                        ENV NAME World<br />
+
+                        # Run app.py when the container launches<br />
+                        CMD ["python", "app.py"]<br />
+                    </div>
+                </div>
+
+                &nbsp;
+                &nbsp;
+
+                <p>Вы за прокси-сервером?
+                  Прокси-серверы могут блокировать подключения
+                  к вашему веб-приложению после его запуска и запуска.
+                  Если вы находитесь за прокси-сервером, добавьте следующие строки в файл Docker,
+                  используя ENVкоманду для указания хоста и порта для ваших прокси-серверов:</p>
+
+                <br />
+                &nbsp;
+                &nbsp;
+                <br />
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">Команду</span></p>
+                <div class="collapse" id="collapse2">
+                    <div class="card card-body">
+                        # Set proxy server, replace host:port with values for your servers
+                        ENV http_proxy host:port
+                        ENV https_proxy host:port
+                    </div>
+                </div>
+
+                <br />
+                &nbsp;
+                &nbsp;
+                <br />
+
+                <p>Этот Dockerfile относится к нескольким файлам ,
+                    мы еще не создали их, а именно app.py и requirements.txt.
+                    Давайте создадим</p>
+
+
+                <br />
+                &nbsp;
+                &nbsp;
+                <br />
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps" aria-expanded="false" aria-controls="dockerps">requirements.txt</span></p>
+                <div class="collapse" id="dockerps">
+                    <div class="card card-body">
+                        Flask
+                        Redis
+                    </div>
+                </div>
+
+                <br />
+                &nbsp;
+                &nbsp;
+                <br />
+
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps1" aria-expanded="false" aria-controls="dockerps">app.py</span></p>
+                <div class="collapse" id="dockerps1">
+                    <div class="card card-body">
+                        from flask import Flask<br/>
+                        from redis import Redis, RedisError<br/>
+                        import os<br/>
+                        import socket<br/>
+
+                        # Connect to Redis<br/>
+                        redis = Redis(host="redis", db=0, socket_connect_timeout=2, socket_timeout=2)<br/>
+
+                        app = Flask(__name__)<br/>
+
+                        @app.route("/")<br/>
+                        def hello():<br/>
+                        try:<br/>
+                        visits = redis.incr("counter")<br/>
+                        except RedisError:<br/>
+                        visits = "<i>cannot connect to Redis, counter disabled</i>"
+
+                        html = "<h3>Hello {name}!</h3>" \
+                        "<b>Hostname:</b> {hostname}<br/>" \
+                        "<b>Visits:</b> {visits}"
+                        return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
+
+                        if __name__ == "__main__":
+                        app.run(host='0.0.0.0', port=80)
+                    </div>
+                </div>
+
+                <br />
+                &nbsp;
+                &nbsp;
+                <br />
+                &nbsp;
+                &nbsp;
+                <p>Теперь мы видим, что pip install -r requirements.txt устанавливает библиотеки Flask
+                    и Redis для Python, и приложение выводит переменную окружения NAME,
+                    а также вывод вызов socket.gethostname().
+                    Поскольку Redis не работает
+                    (поскольку мы только установили библиотеку Python, а не сами Redis), мы должны ожидать,
+                    что попытка использовать его здесь не сработает и выдает сообщение об ошибке.</p>
+                &nbsp;
+
+
+                <h2>Создайте приложение</h2>
+                &nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerpsa" aria-expanded="false" aria-controls="dockerps"> ls -l /docker/aufs/layers/
+
+
+</span></p>
+                <div class="collapse" id="dockerpsa">
+                    <div class="card card-body">
+                        root@hwlezntbao7fc000000:~# ls -l /docker/aufs/layers/<br />
+                        total 8<br />
+                        -rw-r--r-- 1 root root  65 Mar 13 15:48 67b3d665235e6fc550b3bd1a80da6431810101ebda8d5b84a9b615f955338526<br />
+                        -rw-r--r-- 1 root root   0 Mar 13 15:48 d6f9e3f8d84c1db175dd59a24289bd225da698bd9c4e525ce9b0253d80f01041<br />
+                        -rw-r--r-- 1 root root 130 Mar 13 15:48 e0a841409c7f1a485866fd57119016fdfec87030d1e60aa2e53a9d2da30836db<br />
+                    </div>
+                </div>
+                &nbsp;
+                &nbsp;
+
+
+
+                <p>Готово.
+
+                    Для более старых (?) версий Docker – используйте файл  /etc/default/docker в Debian/Ubuntu, и /etc/sysconfig/docker – для RHEL/CentOS.
+
+                    Параметр --graph (-g) в DOCKER_OPTS, например:</p>
+
+
+
+
+
+            </div>
+
+
+
+
+
+            <div class="row">
+                <div class="col-6 col-lg-4">
+                    <h2>Task d[1][dth][1]</h2>
+                    <p>
+                    <ul>
+                        <li>Use "example" image</li>
+                        <li>Load new package for image</li>
+                        <li>Save new changes</li>
+                        <li>Run container and run load package command</li>
+                        <li>Run container and run load package command</li>
+                        <li>Create docker save example</li>
+                        <li>Create docker export example</li>
+                    </ul>
+                    </p>
+
+                    <p><a class="btn btn-secondary" href="/theme_l1_subtheme_task1" role="button">Show result &raquo;</a></p>
+                    <p><button type="button" class="btn btn-info">Show code</button></p>
+                </div><!--/span-->
+            </div><!--/row-->
+        </div><!--/span-->
+
+        <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
+
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Other themes
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Docker</a></li>
+                    <li><a href="#">Drupal 8</a></li>
+                    <li><a href="#">Ansible</a></li>
+                    <li role="separator" class="divider">Vagrant</li>
+                    <li><a href="#">DEV Ops</a></li>
+                </ul>
+            </div>
+
+
+
+            <div class="list-group">
+
+
+
+
+
+                <a href="do[1]-domain-dom[1].html" class="list-group-item">DOCKER[1] - основы докера : часть 1 – введение, установка и запуск</a>
+                <a href="do[1]-domain-dom[2].html" class="list-group-item">Docker: часть 2 – управление контейнерами</a>
+                <a href="do[1]-domain-dom[3].html" class="list-group-item">Docker: изменить рабочую директорию</a>
+                <a href="do[1]-domain-dom[4].html" class="list-group-item active">Создаем Dockerfile</a>
+                <a href="#" class="list-group-item">Процесс сборки образов</a>
+                <a href="#" class="list-group-item">Контейнеризация приложений</a>
+                <a href="#" class="list-group-item">Основы сети в Docker</a>
+
+
+            </div>
+        </div><!--/span-->
+
+        <div class="jumbotron">
+            <h1>Documents and related links</h1>
+            <a href="http://tuhrig.de/difference-between-save-and-export-in-docker//">http://tuhrig.de/difference-between-save-and-export-in-docker/</a>
+        </div>
+
+    </div><!--/row-->
+
+
+
+
+
+    <hr>
+
+    <footer>
+
+    </footer>
+
+</div><!--/.container-->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/static/js/ie10-viewport-bug-workaround.js"></script>
+<script src="offcanvas.js"></script>
+</body>
+</html>
