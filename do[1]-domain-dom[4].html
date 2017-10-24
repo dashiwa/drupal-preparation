@@ -171,29 +171,39 @@
 
                 <h2>Создайте приложение</h2>
                 &nbsp;
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerpsa" aria-expanded="false" aria-controls="dockerps"> ls -l /docker/aufs/layers/
 
 
-</span></p>
-                <div class="collapse" id="dockerpsa">
-                    <div class="card card-body">
-                        root@hwlezntbao7fc000000:~# ls -l /docker/aufs/layers/<br />
-                        total 8<br />
-                        -rw-r--r-- 1 root root  65 Mar 13 15:48 67b3d665235e6fc550b3bd1a80da6431810101ebda8d5b84a9b615f955338526<br />
-                        -rw-r--r-- 1 root root   0 Mar 13 15:48 d6f9e3f8d84c1db175dd59a24289bd225da698bd9c4e525ce9b0253d80f01041<br />
-                        -rw-r--r-- 1 root root 130 Mar 13 15:48 e0a841409c7f1a485866fd57119016fdfec87030d1e60aa2e53a9d2da30836db<br />
-                    </div>
-                </div>
+
+                <p>Теперь запустите команду сборки.</p>
                 &nbsp;
                 &nbsp;
 
 
 
-                <p>Готово.
+                <p>docker build -t test</p>
 
-                    Для более старых (?) версий Docker – используйте файл  /etc/default/docker в Debian/Ubuntu, и /etc/sysconfig/docker – для RHEL/CentOS.
 
-                    Параметр --graph (-g) в DOCKER_OPTS, например:</p>
+                <h2>Инструкции Dockerfile</h2>
+
+                <strong>FROM</strong> - Базовое изображение для создания нового изображения. Эта команда должна находиться вверху файла docker.
+                &nbsp;
+                <strong>MAINTAINER</strong>-Необязательно, содержит имя сопровождающего изображения.
+                &nbsp;
+                <strong>RUN</strong> -  Используется для выполнения команды во время процесса сборки изображения докеров.
+                &nbsp;
+                <strong>ADD</strong> - Скопируйте файл с главного хоста на новый image докера . Существует возможность использовать URL-адрес для файла, затем докер загрузит этот файл в целевой каталог.
+                &nbsp;
+                <strong>ENV</strong>- Определяет переменную окружения
+                &nbsp;
+                <strong>CMD</strong> - Используется для выполнения команд, когда мы создаем новый контейнер из образа докера.
+                &nbsp;
+                <strong>ENTRYPOINT</strong> - Определите команду по умолчанию, которая будет выполняться при запуске контейнера.
+                &nbsp;
+                <strong>WORKDIR</strong> - Это директива для выполнения команды CMD.
+                &nbsp;
+                <strong>USER</strong> - Задайте пользователю или UID для контейнера, созданного с изображением.
+                &nbsp;
+                <strong>VOLUME</strong> - Включить доступ / связанный каталог между контейнером и главной машиной.
 
 
 
