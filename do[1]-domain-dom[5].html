@@ -94,123 +94,102 @@
                 <div class="collapse" id="collapse2">
                     <div class="card card-body">
                         $ docker inspect --format="{{.Volumes}}" 6c9da8f68a9e<br />
-                        map[/e1:/Users/bessarabov/e1]<br />
+                        map[/e1:/Users/example/e1]<br />
                     </div>
                 </div>
 
                 <br />
+
+                &nbsp;
+                <h3>Эксперимент 3. --volumes-from</h3>
+                &nbsp;
+                <br />
+
+                <p>Продолжаем работать с тем же конейнером. Необходимо понять как будет действовать команда --volumes-from. Запускаем новый контейнер:
+
+                </p>
+
+
+                <br />
                 &nbsp;
                 &nbsp;
                 <br />
 
-                <p>Этот Dockerfile относится к нескольким файлам ,
-                    мы еще не создали их, а именно app.py и requirements.txt.
-                    Давайте создадим</p>
-
-
-                <br />
-                &nbsp;
-                &nbsp;
-                <br />
-
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps" aria-expanded="false" aria-controls="dockerps">requirements.txt</span></p>
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps" aria-expanded="false" aria-controls="dockerps">команда</span></p>
                 <div class="collapse" id="dockerps">
                     <div class="card card-body">
-                        Flask
-                        Redis
+                        docker run \
+                        -it \
+                        --volumes-from 6c9da8f68a9e \
+                        ubuntu:14.04 \
+                        /bin/bash
                     </div>
                 </div>
 
                 <br />
                 &nbsp;
-                &nbsp;
+                <p>Смотрим на хост машине  настройки:</p>&nbsp;
+
                 <br />
 
 
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps1" aria-expanded="false" aria-controls="dockerps">app.py</span></p>
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps1" aria-expanded="false" aria-controls="dockerps">команда</span></p>
                 <div class="collapse" id="dockerps1">
                     <div class="card card-body">
-                        from flask import Flask<br/>
-                        from redis import Redis, RedisError<br/>
-                        import os<br/>
-                        import socket<br/>
-
-                        # Connect to Redis<br/>
-                        redis = Redis(host="redis", db=0, socket_connect_timeout=2, socket_timeout=2)<br/>
-
-                        app = Flask(__name__)<br/>
-
-                        @app.route("/")<br/>
-                        def hello():<br/>
-                        try:<br/>
-                        visits = redis.incr("counter")<br/>
-                        except RedisError:<br/>
-                        visits = "<i>cannot connect to Redis, counter disabled</i>"
-
-                        html = "<h3>Hello {name}!</h3>" \
-                        "<b>Hostname:</b> {hostname}<br/>" \
-                        "<b>Visits:</b> {visits}"
-                        return html.format(name=os.getenv("NAME", "world"), hostname=socket.gethostname(), visits=visits)
-
-                        if __name__ == "__main__":
-                        app.run(host='0.0.0.0', port=80)
+                        $ docker inspect --format="{{.Volumes}}" 27f31c5bc0ee
+                        map[/e1:/Users/example/e1]
                     </div>
                 </div>
 
                 <br />
+
+                <p>Сравниваем с предыдущим вариантом</p>
                 &nbsp;
                 &nbsp;
                 <br />
+
+                <h3>Эксперимент 4. --volume с одним параметром</h3>
+
+                <p>Создаю новый контейнер. Но в отличии от эксперимента 1, передаю только один параметр в --volume:</p>
                 &nbsp;
                 &nbsp;
-                <p>Теперь мы видим, что pip install -r requirements.txt устанавливает библиотеки Flask
-                    и Redis для Python, и приложение выводит переменную окружения NAME,
-                    а также вывод вызов socket.gethostname().
-                    Поскольку Redis не работает
-                    (поскольку мы только установили библиотеку Python, а не сами Redis), мы должны ожидать,
-                    что попытка использовать его здесь не сработает и выдает сообщение об ошибке.</p>
-                &nbsp;
+                <strong>docker run \
+                    -it \
+                    --volume /e4 \
+                    ubuntu:14.04 \
+                    /bin/bash</strong>
 
+                <p>Вот его настройки:</p>
 
-                <h2>Создайте приложение</h2>
-                &nbsp;
+                <strong>$ docker inspect --format="{{.Volumes}}" d1849bdd9153
+                    map[/e4:/mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef]</strong>
 
+                <p>В контенере создаю файл
 
+                    root@d1849bdd9153:/# echo 'from container e4' > /e4/4</p>
 
-                <p>Теперь запустите команду сборки.</p>
-                &nbsp;
-                &nbsp;
+                <strong>root@boot2docker:~# cat /mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef/4
+                    from container e4</strong>
 
+                <h3>Эксперимент 5. Еще один контейнер и --volumes-from</h3>
 
+                <p>Создаем новый, но подключаем к новому все volumes из контенера, созданного в эксперименте 4.</p>
 
-                <p>docker build -t test</p>
+                <strong>docker run \
+                    -it \
+                    --volumes-from d1849bdd9153 \
+                    ubuntu:14.04 \
+                    /bin/bash</strong>
 
+                <p>В этом новом контенере я вижу то же что и прошлый раз:</p>
 
-                <h2>Инструкции Dockerfile</h2>
+                <strong>root@77431816df7d:/# cat /e4/4
+                    from container e4</strong>
 
-                <strong>FROM</strong> - Базовое изображение для создания нового изображения. Эта команда должна находиться вверху файла docker.
-                &nbsp;
-                <strong>MAINTAINER</strong>-Необязательно, содержит имя сопровождающего изображения.
-                &nbsp;
-                <strong>RUN</strong> -  Используется для выполнения команды во время процесса сборки изображения докеров.
-                &nbsp;
-                <strong>ADD</strong> - Скопируйте файл с главного хоста на новый image докера . Существует возможность использовать URL-адрес для файла, затем докер загрузит этот файл в целевой каталог.
-                &nbsp;
-                <strong>ENV</strong>- Определяет переменную окружения
-                &nbsp;
-                <strong>CMD</strong> - Используется для выполнения команд, когда мы создаем новый контейнер из образа докера.
-                &nbsp;
-                <strong>ENTRYPOINT</strong> - Определите команду по умолчанию, которая будет выполняться при запуске контейнера.
-                &nbsp;
-                <strong>WORKDIR</strong> - Это директива для выполнения команды CMD.
-                &nbsp;
-                <strong>USER</strong> - Задайте пользователю или UID для контейнера, созданного с изображением.
-                &nbsp;
-                <strong>VOLUME</strong> - Включить доступ / связанный каталог между контейнером и главной машиной.
+                <p>Смотрим на хост машине данные об  этом контенейре и видим точно такие же настройки, как и в случае эксперимента 4</p>
 
-
-
-
+                <p>$ docker inspect --format="{{.Volumes}}" 77431816df7d
+                    map[/e4:/mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef]</p>
 
             </div>
 
