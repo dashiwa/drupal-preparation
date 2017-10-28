@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>Docker Volumes</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="offcanvas.css" rel="stylesheet">
+</head>
+
+<body>
+
+
+
+<div class="container">
+
+    <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-12 col-md-9">
+            <p class="float-right d-md-none">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
+            </p>
+            <div class="jumbotron">
+                <h1>Контейнерные сети Docker</h1>
+
+                <br />
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                <p><strong>Эксперимент 1. Пробрасывание локальной папки в докер.</strong>
+                <p>Есть хост машина по имени air и на ней  запускается контейнер. Необходимо сделать так чтобы папка /Users/example/e1 из хост машины была доступна в контейнере как /e1</p>
+                &nbsp;
+                &nbsp;
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapseExample">Example</span></p>
+                <div class="collapse" id="collapse1">
+                    <div class="card card-body">
+                        docker run \<br/>
+                        -it \<br/>
+                        --volume /Users/example/e1:/e1 \<br/>
+                        ubuntu:14.04 \<br/>
+                        /bin/bash<br/>
+                    </div>
+                </div>
+
+                &nbsp;
+                &nbsp;
+
+                <p>Создаем в контейнере файл:</p>
+
+                <br />
+                &nbsp;<p><strong>root@6c9da8f68a9e:/# echo 'from container' > /e1/1</strong></p>
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                &nbsp;
+                <br />
+                &nbsp;&nbsp;
+
+                <p>Проверяем доступность на машине</p>
+                &nbsp;&nbsp;&nbsp;<br /><br />
+                <strong>root@5:~/e1$ cat 1
+                    from container</strong><br /><br />
+
+                &nbsp;&nbsp;&nbsp;
+
+
+                <p>Проверяем что это работает в обратную сторону. Создаем файл на хост машине:</p>
+                &nbsp;&nbsp;<br /><br />
+                <strong>root@5:~/e1$ echo 'from host' > 2</strong>
+                &nbsp;&nbsp;<br /><br />
+
+
+                <p>Проверяем контейнер</p>
+                &nbsp;&nbsp;<br /><br />
+                <strong>root@6c9da8f68a9e:/# cat /e1/2
+                    from host</strong>&nbsp;&nbsp;<br /><br />&nbsp;&nbsp;<br /><br />
+
+
+                <h3>Эксперимент 2. Настройки контейнера?</h3>
+
+                <p>Продолжаем работать с контейнером из эксперимента 1. На хост машине запускаем команду чтобы посмотреть настройки контейнера:</p>
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">Команду</span></p>
+                <div class="collapse" id="collapse2">
+                    <div class="card card-body">
+                        $ docker inspect --format="{{.Volumes}}" 6c9da8f68a9e<br />
+                        map[/e1:/Users/example/e1]<br />
+                    </div>
+                </div>
+
+                <br />
+
+                &nbsp;
+                <h3>Эксперимент 3. --volumes-from</h3>
+                &nbsp;
+                <br />
+
+                <p>Продолжаем работать с тем же конейнером. Необходимо понять как будет действовать команда --volumes-from. Запускаем новый контейнер:
+
+                </p>
+
+
+                <br />
+                &nbsp;
+                &nbsp;
+                <br />
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps" aria-expanded="false" aria-controls="dockerps">команда</span></p>
+                <div class="collapse" id="dockerps">
+                    <div class="card card-body">
+                        docker run \
+                        -it \
+                        --volumes-from 6c9da8f68a9e \
+                        ubuntu:14.04 \
+                        /bin/bash
+                    </div>
+                </div>
+
+                <br />
+                &nbsp;
+                <p>Смотрим на хост машине  настройки:</p>&nbsp;
+
+                <br />
+
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps1" aria-expanded="false" aria-controls="dockerps">команда</span></p>
+                <div class="collapse" id="dockerps1">
+                    <div class="card card-body">
+                        $ docker inspect --format="{{.Volumes}}" 27f31c5bc0ee
+                        map[/e1:/Users/example/e1]
+                    </div>
+                </div>
+
+                <br />
+
+                <p>Сравниваем с предыдущим вариантом</p>
+                &nbsp;
+                &nbsp;
+                <br />
+
+                <h3>Эксперимент 4. --volume с одним параметром</h3>
+
+                <p>Создаю новый контейнер. Но в отличии от эксперимента 1, передаю только один параметр в --volume:</p>
+                &nbsp;
+                &nbsp;
+                <strong>docker run \
+                    -it \
+                    --volume /e4 \
+                    ubuntu:14.04 \
+                    /bin/bash</strong>
+
+                <p>Вот его настройки:</p>
+
+                <strong>$ docker inspect --format="{{.Volumes}}" d1849bdd9153
+                    map[/e4:/mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef]</strong>
+
+                <p>В контенере создаю файл
+
+                    root@d1849bdd9153:/# echo 'from container e4' > /e4/4</p>
+
+                <strong>root@boot2docker:~# cat /mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef/4
+                    from container e4</strong>
+
+                <h3>Эксперимент 5. Еще один контейнер и --volumes-from</h3>
+
+                <p>Создаем новый, но подключаем к новому все volumes из контенера, созданного в эксперименте 4.</p>
+
+                <strong>docker run \
+                    -it \
+                    --volumes-from d1849bdd9153 \
+                    ubuntu:14.04 \
+                    /bin/bash</strong>
+
+                <p>В этом новом контенере я вижу то же что и прошлый раз:</p>
+
+                <strong>root@77431816df7d:/# cat /e4/4
+                    from container e4</strong>
+
+                <p>Смотрим на хост машине данные об  этом контенейре и видим точно такие же настройки, как и в случае эксперимента 4</p>
+
+                <p>$ docker inspect --format="{{.Volumes}}" 77431816df7d
+                    map[/e4:/mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef]</p>
+
+            </div>
+
+
+
+
+
+            <div class="row">
+                <div class="col-6 col-lg-4">
+                    <h2>Task d[1][dth][1]</h2>
+                    <p>
+                    <ul>
+                        <li>Use "example" image</li>
+                        <li>Load new package for image</li>
+                        <li>Save new changes</li>
+                        <li>Run container and run load package command</li>
+                        <li>Run container and run load package command</li>
+                        <li>Create docker save example</li>
+                        <li>Create docker export example</li>
+                    </ul>
+                    </p>
+
+                    <p><a class="btn btn-secondary" href="/theme_l1_subtheme_task1" role="button">Show result &raquo;</a></p>
+                    <p><button type="button" class="btn btn-info">Show code</button></p>
+                </div><!--/span-->
+            </div><!--/row-->
+        </div><!--/span-->
+
+        <div class="col-6 col-md-3 sidebar-offcanvas" id="sidebar">
+
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Other themes
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#">Docker</a></li>
+                    <li><a href="#">Drupal 8</a></li>
+                    <li><a href="#">Ansible</a></li>
+                    <li role="separator" class="divider">Vagrant</li>
+                    <li><a href="#">DEV Ops</a></li>
+                </ul>
+            </div>
+
+
+
+            <div class="list-group">
+
+
+
+
+
+                <a href="do[1]-domain-dom[1].html" class="list-group-item">DOCKER[1] - основы докера : часть 1 – введение, установка и запуск</a>
+                <a href="do[1]-domain-dom[2].html" class="list-group-item">Docker: часть 2 – управление контейнерами</a>
+                <a href="do[1]-domain-dom[3].html" class="list-group-item">Docker: изменить рабочую директорию</a>
+                <a href="do[1]-domain-dom[4].html" class="list-group-item ">Создаем Dockerfile</a>
+                <a href="do[1]-domain-dom[5].html" class="list-group-item active">Docker Volumes</a>
+                <a href="#" class="list-group-item">Контейнеризация приложений</a>
+                <a href="#" class="list-group-item">Основы сети в Docker</a>
+
+
+            </div>
+        </div><!--/span-->
+
+        <div class="jumbotron">
+            <h1>Documents and related links</h1>
+            <a href="http://tuhrig.de/difference-between-save-and-export-in-docker//">http://tuhrig.de/difference-between-save-and-export-in-docker/</a>
+        </div>
+
+    </div><!--/row-->
+
+
+
+
+
+    <hr>
+
+    <footer>
+
+    </footer>
+
+</div><!--/.container-->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/static/js/popper.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/static/js/ie10-viewport-bug-workaround.js"></script>
+<script src="offcanvas.js"></script>
+</body>
+</html>
