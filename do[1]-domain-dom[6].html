@@ -36,29 +36,29 @@
                 &nbsp;
                 &nbsp;
                 &nbsp;
-                <p><strong>Эксперимент 1. Пробрасывание локальной папки в докер.</strong>
-                <p>Есть хост машина по имени air и на ней  запускается контейнер. Необходимо сделать так чтобы папка /Users/example/e1 из хост машины была доступна в контейнере как /e1</p>
+                <h3>Сети по умолчанию</h3>
+
+                <p>Когда вы устанавливаете Docker, он автоматически создает три сети. Вы можете перечислить эти сети, используя docker network ls</p>
                 &nbsp;
                 &nbsp;
 
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapseExample">Example</span></p>
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse1" aria-expanded="false" aria-controls="collapseExample">docker network ls</span></p>
                 <div class="collapse" id="collapse1">
                     <div class="card card-body">
-                        docker run \<br/>
-                        -it \<br/>
-                        --volume /Users/example/e1:/e1 \<br/>
-                        ubuntu:14.04 \<br/>
-                        /bin/bash<br/>
+                        NETWORK ID          NAME                DRIVER<br/>
+                        7fca4eb8c647        bridge              bridge<br/>
+                        9f904ee27bf5        none                null<br/>
+                        cf03ee007fb4        host                host<br/>
                     </div>
                 </div>
 
                 &nbsp;
                 &nbsp;
-
-                <p>Создаем в контейнере файл:</p>
+                <br /><br /><br />
+                <p>Эти три сети встроены в Docker. Когда вы запускаете контейнер, вы можете использовать --networkфлаг, чтобы указать, к каким сетям должен подключиться ваш контейнер.</p>
 
                 <br />
-                &nbsp;<p><strong>root@6c9da8f68a9e:/# echo 'from container' > /e1/1</strong></p>
+                &nbsp;<p>bridge Сеть представляет собой docker0сеть присутствует во всех установках DOCKER. Если вы не укажете docker run --network=<NETWORK>опцию с опцией, демон Docker по умолчанию подключает контейнеры к этой сети. Этот мост можно увидеть как часть сетевого стека хоста, используя ip addr showкоманду (или короткую форму ip a) на хосте.</p>
                 &nbsp;
                 &nbsp;
                 &nbsp;
@@ -66,15 +66,18 @@
                 <br />
                 &nbsp;&nbsp;
 
-                <p>Проверяем доступность на машине</p>
+                <p>hostСеть добавляет контейнер на сетевой стек хоста. Что касается сети, то между основной машиной и контейнером нет изоляции. Например, если вы запускаете контейнер, который запускает веб-сервер на порту 80 с использованием сети хоста, веб-сервер доступен на порту 80 хост-машины.</p>
                 &nbsp;&nbsp;&nbsp;<br /><br />
-                <strong>root@5:~/e1$ cat 1
-                    from container</strong><br /><br />
+                &nbsp;
+                &nbsp;
+                <p><strong>none</strong> И <strong>host</strong> сети непосредственно не настраивается в Докер. Однако вы можете настроить <strong>bridge</strong> сеть по умолчанию , а также свои собственные сети моста, определенные пользователем</p>
 
                 &nbsp;&nbsp;&nbsp;
 
+                <h3>Сеть моста по умолчанию</h3>
 
-                <p>Проверяем что это работает в обратную сторону. Создаем файл на хост машине:</p>
+
+                <!--<p>Проверяем что это работает в обратную сторону. Создаем файл на хост машине:</p>
                 &nbsp;&nbsp;<br /><br />
                 <strong>root@5:~/e1$ echo 'from host' > 2</strong>
                 &nbsp;&nbsp;<br /><br />
@@ -210,7 +213,7 @@
                         <li>Create docker save example</li>
                         <li>Create docker export example</li>
                     </ul>
-                    </p>
+                    </p>-->
 
                     <p><a class="btn btn-secondary" href="/theme_l1_subtheme_task1" role="button">Show result &raquo;</a></p>
                     <p><button type="button" class="btn btn-info">Show code</button></p>
