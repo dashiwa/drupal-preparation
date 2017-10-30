@@ -55,10 +55,15 @@
                 &nbsp;
                 &nbsp;
                 <br /><br /><br />
-                <p>Эти три сети встроены в Docker. Когда вы запускаете контейнер, вы можете использовать --networkфлаг, чтобы указать, к каким сетям должен подключиться ваш контейнер.</p>
+                <p>Эти три сети встроены в Docker. Когда вы запускаете контейнер, вы можете использовать --network флаг, чтобы указать, к каким сетям должен подключиться ваш контейнер.</p>
 
                 <br />
-                &nbsp;<p>bridge Сеть представляет собой docker0сеть присутствует во всех установках DOCKER. Если вы не укажете docker run --network=<NETWORK>опцию с опцией, демон Docker по умолчанию подключает контейнеры к этой сети. Этот мост можно увидеть как часть сетевого стека хоста, используя ip addr showкоманду (или короткую форму ip a) на хосте.</p>
+                &nbsp;<p>bridge Сеть представляет собой docker0
+                сеть присутствует во всех установках DOCKER.
+                Если вы не укажете docker run --network=<NETWORK> опцию с опцией,
+                демон Docker по умолчанию подключает контейнеры к этой сети.
+                Этот мост можно увидеть как часть сетевого стека хоста,
+                используя ip addr showкоманду (или короткую форму ip a) на хосте.</p>
                 &nbsp;
                 &nbsp;
                 &nbsp;
@@ -66,125 +71,247 @@
                 <br />
                 &nbsp;&nbsp;
 
-                <p>hostСеть добавляет контейнер на сетевой стек хоста. Что касается сети, то между основной машиной и контейнером нет изоляции. Например, если вы запускаете контейнер, который запускает веб-сервер на порту 80 с использованием сети хоста, веб-сервер доступен на порту 80 хост-машины.</p>
+                <p>host Сеть добавляет контейнер на сетевой стек хоста.
+                    Что касается сети, то между основной
+                    машиной и контейнером нет изоляции. Например, если вы запускаете контейнер, который запускает веб-сервер на порту 80 с использованием сети хоста, веб-сервер доступен на порту 80 хост-машины.</p>
                 &nbsp;&nbsp;&nbsp;<br /><br />
                 &nbsp;
                 &nbsp;
                 <p><strong>none</strong> И <strong>host</strong> сети непосредственно не настраивается в Докер. Однако вы можете настроить <strong>bridge</strong> сеть по умолчанию , а также свои собственные сети моста, определенные пользователем</p>
 
-                &nbsp;&nbsp;&nbsp;
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">ip addr show</span></p>
+                <div class="collapse" id="collapse2">
+                    <div class="card card-body">
+                        docker0   Link encap:Ethernet  HWaddr 02:42:47:bc:3a:eb<br />
+                        inet addr:172.17.0.1  Bcast:0.0.0.0  Mask:255.255.0.0<br />
+                        inet6 addr: fe80::42:47ff:febc:3aeb/64 Scope:Link<br />
+                        UP BROADCAST RUNNING MULTICAST  MTU:9001  Metric:1<br />
+                        RX packets:17 errors:0 dropped:0 overruns:0 frame:0<br />
+                        TX packets:8 errors:0 dropped:0 overruns:0 carrier:0<br />
+                        collisions:0 txqueuelen:0<br />
+                        RX bytes:1100 (1.1 KB)  TX bytes:648 (648.0 B)<br />
+                    </div>
+                </div>
+
+                <br />
+
+                &nbsp;
+
+                &nbsp;
+                <br />
+
+                <p>noneСеть добавляет контейнер в контейнере конкретного сетевого стека.
+                    В этом контейнере отсутствует сетевой интерфейс.
+                    Прикрепившись к такому контейнеру и взглянув на его стек,
+                    вы увидите следующее:</p>
+
+
+                <br />
+                &nbsp;
+                &nbsp;
+                <br />
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps" aria-expanded="false" aria-controls="dockerps">docker attach nonenetcontainer</span></p>
+                <div class="collapse" id="dockerps">
+                    <div class="card card-body">
+                        root@0cb243cd1293:/# cat /etc/hosts<br/>
+                        127.0.0.1	localhost<br/>
+                        ::1	localhost ip6-localhost ip6-loopback<br/>
+                        fe00::0	ip6-localnet<br/>
+                        ff00::0	ip6-mcastprefix<br/>
+                        ff02::1	ip6-allnodes<br/>
+                        ff02::2	ip6-allrouters<br/>
+
+                        root@0cb243cd1293:/# ip -4 addr<br/>
+                        1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1<br/>
+                        inet 127.0.0.1/8 scope host lo<br/>
+                        valid_lft forever preferred_lft forever<br/>
+                        root@0cb243cd1293:/#<br/>
+                    </div>
+                </div>
+
+                <br />
+                &nbsp;
+                <p>hostСеть добавляет контейнер на сетевой стек хоста.
+                    Что касается сети, то между основной машиной и контейнером нет изоляции.
+                    Например, если вы запускаете контейнер,
+                    который запускает веб-сервер на порту 80 с использованием сети хоста,
+                    веб-сервер доступен на порту 80 хост-машины.</p>&nbsp;
+
+                <br />
+
+                <p>none И hostсети непосредственно не настраивается в Докер.
+                    Однако вы можете настроить bridgeсеть по умолчанию ,
+                    а также свои собственные сети моста, определенные пользователем.</p>
 
                 <h3>Сеть моста по умолчанию</h3>
 
+                <p>Сеть по умолчанию bridgeприсутствует на всех хостах Docker. Если вы не укажете другую сеть, новые контейнеры автоматически подключаются к bridgeсети по умолчанию .
 
-                <!--<p>Проверяем что это работает в обратную сторону. Создаем файл на хост машине:</p>
-                &nbsp;&nbsp;<br /><br />
-                <strong>root@5:~/e1$ echo 'from host' > 2</strong>
-                &nbsp;&nbsp;<br /><br />
+                    Команда docker network inspectвозвращает информацию о сети:</p>
 
 
-                <p>Проверяем контейнер</p>
-                &nbsp;&nbsp;<br /><br />
-                <strong>root@6c9da8f68a9e:/# cat /e1/2
-                    from host</strong>&nbsp;&nbsp;<br /><br />&nbsp;&nbsp;<br /><br />
-
-
-                <h3>Эксперимент 2. Настройки контейнера?</h3>
-
-                <p>Продолжаем работать с контейнером из эксперимента 1. На хост машине запускаем команду чтобы посмотреть настройки контейнера:</p>
-
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#collapse2" aria-expanded="false" aria-controls="collapseExample">Команду</span></p>
-                <div class="collapse" id="collapse2">
-                    <div class="card card-body">
-                        $ docker inspect --format="{{.Volumes}}" 6c9da8f68a9e<br />
-                        map[/e1:/Users/example/e1]<br />
-                    </div>
-                </div>
-
-                <br />
-
-                &nbsp;
-                <h3>Эксперимент 3. --volumes-from</h3>
-                &nbsp;
-                <br />
-
-                <p>Продолжаем работать с тем же конейнером. Необходимо понять как будет действовать команда --volumes-from. Запускаем новый контейнер:
-
-                </p>
-
-
-                <br />
-                &nbsp;
-                &nbsp;
-                <br />
-
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps" aria-expanded="false" aria-controls="dockerps">команда</span></p>
-                <div class="collapse" id="dockerps">
-                    <div class="card card-body">
-                        docker run \
-                        -it \
-                        --volumes-from 6c9da8f68a9e \
-                        ubuntu:14.04 \
-                        /bin/bash
-                    </div>
-                </div>
-
-                <br />
-                &nbsp;
-                <p>Смотрим на хост машине  настройки:</p>&nbsp;
-
-                <br />
-
-
-                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps1" aria-expanded="false" aria-controls="dockerps">команда</span></p>
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockerps1" aria-expanded="false" aria-controls="dockerps">docker network inspect bridge</span></p>
                 <div class="collapse" id="dockerps1">
                     <div class="card card-body">
-                        $ docker inspect --format="{{.Volumes}}" 27f31c5bc0ee
-                        map[/e1:/Users/example/e1]
+                        [
+                        {
+                        "Name": "bridge",
+                        "Id": "f7ab26d71dbd6f557852c7156ae0574bbf62c42f539b50c8ebde0f728a253b6f",
+                        "Scope": "local",
+                        "Driver": "bridge",
+                        "IPAM": {
+                        "Driver": "default",
+                        "Config": [
+                        {
+                        "Subnet": "172.17.0.1/16",
+                        "Gateway": "172.17.0.1"
+                        }
+                        ]
+                        },
+                        "Containers": {},
+                        "Options": {
+                        "com.docker.network.bridge.default_bridge": "true",
+                        "com.docker.network.bridge.enable_icc": "true",
+                        "com.docker.network.bridge.enable_ip_masquerade": "true",
+                        "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+                        "com.docker.network.bridge.name": "docker0",
+                        "com.docker.network.driver.mtu": "9001"
+                        },
+                        "Labels": {}
+                        }
+                        ]
                     </div>
                 </div>
 
                 <br />
 
-                <p>Сравниваем с предыдущим вариантом</p>
+                <p>Выполните следующие две команды, чтобы запустить два busyboxконтейнера,
+                    каждый из которых подключен к bridgeсети по умолчанию .</p>
                 &nbsp;
                 &nbsp;
                 <br />
 
-                <h3>Эксперимент 4. --volume с одним параметром</h3>
 
-                <p>Создаю новый контейнер. Но в отличии от эксперимента 1, передаю только один параметр в --volume:</p>
-                &nbsp;
-                &nbsp;
-                <strong>docker run \
-                    -it \
-                    --volume /e4 \
-                    ubuntu:14.04 \
-                    /bin/bash</strong>
+                <strong>$ docker run -itd --name=container1 busybox
 
-                <p>Вот его настройки:</p>
+                    3386a527aa08b37ea9232cbcace2d2458d49f44bb05a6b775fba7ddd40d8f92c
 
-                <strong>$ docker inspect --format="{{.Volumes}}" d1849bdd9153
-                    map[/e4:/mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef]</strong>
+                    $ docker run -itd --name=container2 busybox
 
-                <p>В контенере создаю файл
+                    94447ca479852d29aeddca75c28f7104df3c3196d7b6d83061879e339946805c</strong>
 
-                    root@d1849bdd9153:/# echo 'from container e4' > /e4/4</p>
+                <p>Осмотрите bridgeсеть снова после запуска двух контейнеров.
+                    Оба busyboxконтейнера подключены к сети.
+                    Обратите внимание на их IP-адреса,
+                    которые будут отличаться от вашего хост-компьютера,
+                    чем в приведенном ниже примере.</p>
 
-                <strong>root@boot2docker:~# cat /mnt/sda1/var/lib/docker/vfs/dir/56ce42d7366c198780ed3aa3dfed0a1c194a89cbfc6fa83121f07a58a28ff7ef/4
-                    from container e4</strong>
+                <strong>$ docker network inspect bridge
 
-                <h3>Эксперимент 5. Еще один контейнер и --volumes-from</h3>
+                    {[
+                    {
+                    "Name": "bridge",
+                    "Id": "f7ab26d71dbd6f557852c7156ae0574bbf62c42f539b50c8ebde0f728a253b6f",
+                    "Scope": "local",
+                    "Driver": "bridge",
+                    "IPAM": {
+                    "Driver": "default",
+                    "Config": [
+                    {
+                    "Subnet": "172.17.0.1/16",
+                    "Gateway": "172.17.0.1"
+                    }
+                    ]
+                    },
+                    "Containers": {
+                    "3386a527aa08b37ea9232cbcace2d2458d49f44bb05a6b775fba7ddd40d8f92c": {
+                    "EndpointID": "647c12443e91faf0fd508b6edfe59c30b642abb60dfab890b4bdccee38750bc1",
+                    "MacAddress": "02:42:ac:11:00:02",
+                    "IPv4Address": "172.17.0.2/16",
+                    "IPv6Address": ""
+                    },
+                    "94447ca479852d29aeddca75c28f7104df3c3196d7b6d83061879e339946805c": {
+                    "EndpointID": "b047d090f446ac49747d3c37d63e4307be745876db7f0ceef7b311cbba615f48",
+                    "MacAddress": "02:42:ac:11:00:03",
+                    "IPv4Address": "172.17.0.3/16",
+                    "IPv6Address": ""
+                    }
+                    },
+                    "Options": {
+                    "com.docker.network.bridge.default_bridge": "true",
+                    "com.docker.network.bridge.enable_icc": "true",
+                    "com.docker.network.bridge.enable_ip_masquerade": "true",
+                    "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+                    "com.docker.network.bridge.name": "docker0",
+                    "com.docker.network.driver.mtu": "9001"
+                    },
+                    "Labels": {}
+                    }
+                    ]</strong>
 
-                <p>Создаем новый, но подключаем к новому все volumes из контенера, созданного в эксперименте 4.</p>
+                <p>Контейнеры, подключенные к bridgeсети по умолчанию,
+                    могут связываться друг с другом по IP-адресу.
+                    Docker не поддерживает автоматическое обнаружение услуг
+                    в сети моста по умолчанию.
+                    Если вы хотите, чтобы контейнеры могли разрешать
+                    IP-адреса по имени контейнера, вместо этого
+                    вы должны использовать определенные пользователем сети .
+                    Вы можете связать два контейнера вместе,
+                    используя устаревший docker run --linkвариант,
+                    но это не рекомендуется в большинстве случаев.
 
-                <strong>docker run \
-                    -it \
-                    --volumes-from d1849bdd9153 \
-                    ubuntu:14.04 \
-                    /bin/bash</strong>
+                    Вы можете attach запустить,
+                    container чтобы посмотреть,
+                    как выглядит сеть внутри контейнера.
+                    Вы подключены как root, поэтому ваша командная строка является #символом.</p>
 
-                <p>В этом новом контенере я вижу то же что и прошлый раз:</p>
+                <strong>docker attach container1
+
+                    root@3386a527aa08:/# ip -4 addr
+
+                    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1
+                    inet 127.0.0.1/8 scope host lo
+                    valid_lft forever preferred_lft forever
+                    633: eth0@if634: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue
+                    inet 172.17.0.2/16 scope global eth0
+                    valid_lft forever preferred_lft forever</strong>
+
+
+
+                <p>Изнутри контейнера используйте ping команду
+                    для проверки сетевого подключения на IP-адрес
+                    другого контейнера.<p>
+
+                <strong>root@3386a527aa08:/# ping -w3 172.17.0.3
+
+                    PING 172.17.0.3 (172.17.0.3): 56 data bytes
+                    64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.096 ms
+                    64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.080 ms
+                    64 bytes from 172.17.0.3: seq=2 ttl=64 time=0.074 ms
+
+                    --- 172.17.0.3 ping statistics ---
+                    3 packets transmitted, 3 packets received, 0% packet loss
+                    round-trip min/avg/max = 0.074/0.083/0.096 ms</strong>
+
+                <p>Используйте catкоманду для просмотра /etc/hostsфайла в контейнере.
+                Это показывает имена хостов и IP-адреса, которые распознает контейнер.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
 
                 <strong>root@77431816df7d:/# cat /e4/4
                     from container e4</strong>
