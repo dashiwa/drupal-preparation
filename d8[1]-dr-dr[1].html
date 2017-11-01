@@ -41,11 +41,32 @@
                 <br />
                 <br />
 
-                <p>Примеры маршрутизации
+                <p>Drupal 8 использует ядро ​​Symfony HTTP Kernel,
+                    систему, которая получает запрос,
+                    и просит другие системы произвести запрошенный вывод (объект ответа)
+                    и отправляет ответ обратно клиенту.
+                    Выход генерируется куском кода, называемым контроллером.
+                    Теоретически контроллер может быть либо чистой функцией PHP 4,
+                    либо методом объекта, либо анонимной функцией.
                     </p>
                 <br />
 
+                <h3>Маршрутизация Symfony по сравнению с маршрутизацией Drupal</h3>
 
+                В качестве разработчика модуля вы определяете список маршрутов и соответствующих контроллеров, например:
+
+                &nbsp;&nbsp;&nbsp;
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat12" aria-expanded="false" aria-controls="dockerps">Пример</span></p>
+
+                <div class="collapse" id="dockernat12">
+                    <div class="card card-body"> taxonomy.autocomplete_vid:<br/>
+                        path: '/taxonomy/autocomplete_vid/{taxonomy_vocabulary}'<br/>
+                        defaults:<br/>
+                        _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocompletePerVid'<br/>
+                        requirements:<br/>
+                        taxonomy_vocabulary: \d+<br/>
+                    </div>
+                </div>
 
 
 
