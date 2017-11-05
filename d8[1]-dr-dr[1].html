@@ -54,7 +54,9 @@
                 <h3>Маршрутизация Symfony по сравнению с маршрутизацией Drupal</h3>
 
                 В качестве разработчика модуля вы определяете список маршрутов и соответствующих контроллеров, например:
+                Ключевой концепцией является контроллер, который получает некоторые параметры из системы и преобразует их в ответ. В этом примере у вас есть параметр 'taxonomy_vocabulary'. Все без подчеркивания считается параметром контроллера. Если вы хотите указать значение по умолчанию, вы должны поместить его в массив по умолчанию. Свойства, не имеющие ничего общего с параметрами контроллера, считаются внутренними и имеют символ подчеркивания в качестве префикса.
 
+                Symfony также позволяет вам определять регулярные выражения для проверки правильности входящего параметра (с использованием «требований»). В приведенном выше коде он будет соответствовать только числам.
                 &nbsp;&nbsp;&nbsp;
                 <p><span class="alert alert-success" data-toggle="collapse" data-target="#dockernat12" aria-expanded="false" aria-controls="dockerps">Пример</span></p>
 
@@ -71,7 +73,25 @@
 
                 <p>(Документация Symfony использует «шаблон» вместо «path», но поскольку Symfony 2.2 (теперь включен в Drupal), ключ «path» используется в файле маршрутизации.)</p>
 
+                <h3>Маршрутизация в файлах routing.yml</h3>
 
+                <p>Пример</p>
+
+                <strong>example.info.ymlexample.routing.yml</strong>
+
+
+                <p><span class="alert alert-success" data-toggle="collapse" data-target="#r2" aria-expanded="false" aria-controls="dockerps">Пример</span></p>
+
+                <div class="collapse" id="r2">
+                    <div class="card card-body"> example.content:
+                        path: '/example'
+                        defaults:
+                        _controller: '\Drupal\example\Controller\ExampleController::content'
+                        _title: 'Hello World'
+                        requirements:
+                        _permission: 'access content'
+                    </div>
+                </div>
 
 
 
