@@ -28,7 +28,7 @@
             <p class="float-right d-md-none">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="offcanvas">Toggle nav</button>
             </p>
-            <p class="jumbotron">
+            <div class="jumbotron">
 
 
 
@@ -188,6 +188,38 @@
 
             <p>Обратите внимание, что имена модулей имеют строчные буквы с символами подчеркивания, а имена классов - верблюжью нотацию</p>
 
+                <p><strong>_form :</strong> Это ожидание внедрения класса . См. Пример API-интерфейса API в Drupal 8 .Drupal\Core\Form\FormInterface</p>
+
+                <p><strong>_entity_view :</strong> Значение . Найти объект в пути и отобразить его в данном режиме просмотра.
+                    Например , вернет массив рендеринга {node} в тизерном режиме.
+                    См. Страницы просмотра сущностей, предоставленные контроллером представления сущностиentity_type.view_mode_entity_view:
+                    node.teaser</p>
+
+                <p><strong>_entity_list :</strong>
+                Значение entity_type. Предоставляет список объектов,
+                использующих EntityListController соответствующего объекта. Например,
+                <strong>_entity_list: view_mode</strong> возвращает массив рендеринга списка режимов просмотра.</p>
+
+
+                <p><strong>_entity_form :</strong>
+                    Аналогично <strong>_form,</strong>
+                    но предоставит форму редактирования для объекта.
+                    Обработчики форм объектов определены в метаданных объекта (аннотация).
+                    Например, отобразится форма узла по умолчанию. «node» in относится к идентификатору объекта,
+                    а «default» относится к ключу обработчика формы.<strong>_entity_form: node.defaultnode.default</strong></p>
+
+                <p><strong>_title</strong> (необязательно) : название страницы для маршрута. Может отличаться от названия ссылки меню.</p>
+
+
+
+                <p><strong>_title_arguments (необязательно)</strong> : дополнительные аргументы для текста заголовка, переданного по t ().</p>
+
+
+                <p><strong>_title_context</strong> (необязательно) :
+                    дополнительная контекстная информация для текста заголовка, передаваемого по t ().</p>
+
+                <p><strong>_title_callback </strong>(необязательно) : PHP,
+                вызываемый (обычно ), возвращающий заголовок страницы для маршрута.classname::method</p>
 
 
 
