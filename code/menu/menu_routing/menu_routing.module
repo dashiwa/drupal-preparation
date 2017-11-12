@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Allows users to create and organize related content in an outline.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function menu_routing_menu(){
+  $items['menu/routing/first'] = array(
+    'title' => 'Path concept',
+    'page callback' => 'menu_routing_path_concept_callback',
+    'access callback' => TRUE,
+    'access arguments' => array('access user profiles'),
+    'type' => MENU_CALLBACK,
+    'file' => 'user.pages.inc',
+  );
+}
