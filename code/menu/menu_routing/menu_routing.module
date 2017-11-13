@@ -13,8 +13,12 @@ function menu_routing_menu(){
     'title' => 'Path concept',
     'page callback' => 'menu_routing_path_concept_callback',
     'access callback' => TRUE,
-    'access arguments' => array('access user profiles'),
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
+  return $items;
+}
+
+
+function menu_routing_path_concept_callback(){
+  return 'h1';
 }
