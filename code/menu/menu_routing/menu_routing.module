@@ -22,3 +22,30 @@ function menu_routing_menu(){
 function menu_routing_path_concept_callback(){
   return 'h1';
 }
+
+
+/*return values*/
+/*
+"title":
+"title callback":
+"title arguments":
+"description":
+"page callback":
+"page arguments":
+"delivery callback":
+"access callback":
+"access arguments":
+"theme callback":
+"theme arguments":
+"file path":
+"load arguments":
+"weight":
+"menu_name":
+"expanded":
+"context":
+"tab_parent"
+"tab_root":
+"position":
+"type":
+"options":
+*/
