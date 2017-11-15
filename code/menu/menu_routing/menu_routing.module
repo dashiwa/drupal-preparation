@@ -5,35 +5,16 @@
  * Allows users to create and organize related content in an outline.
  */
 
-/**
- * Implements hook_menu().
- */
-function menu_routing_menu(){
-  $items['menu/routing/first'] = array(
-    'title' => 'Path concept',
-    'page callback' => 'menu_routing_path_concept_callback',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
-
-
-function menu_routing_path_concept_callback(){
-  return 'h1';
-}
-
-
 /*return values*/
 /*
-"title":
-"title callback":
-"title arguments":
-"description":
-"page callback":
-"page arguments":
-"delivery callback":
-"access callback":
+#1"title":
+#2"title callback":
+#3"title arguments":
+#4"description":
+#5"page callback":
+#6"page arguments":
+#7"delivery callback":
+#8"access callback":
 "access arguments":
 "theme callback":
 "theme arguments":
@@ -49,3 +30,60 @@ function menu_routing_path_concept_callback(){
 "type":
 "options":
 */
+
+
+/**
+ * Implements hook_menu().
+ */
+function menu_routing_menu(){// arg/origin/destination
+  $items['menu/routing/first/%/%/%'] = array(
+    #1
+    'title' => 'Example menu',
+    #2
+    'title callback' => 'example_title_callback',
+    #3
+    'title arguments' => array(1),
+    #4
+    'description' => 'Example description',
+    #5
+    'page callback' => 'menu_routing_example_menu',
+    #6
+    'page arguments' => array(0,1,2),
+    #7
+    'delivery callback' => 'example_deliver_page',
+    #8
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+function example_title_callback($arg) {
+  return t('Example @arg', array(
+    '@arg' => $arg
+  ));
+}
+
+function menu_routing_example_menu($first,$second,$third){
+  return 'h1';
+}
+
+
+
+function example_deliver_page($page_callback_result) {
+  if (is_null(drupal_get_http_header('Content-Type'))) {
+    drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+  }
+
+  // Send appropriate HTTP-Header for browsers and search engines.
+  global $language;
+  drupal_add_http_header('Content-Language', $language->language);
+
+  // Render page and content
+  print '<html><head></head><body>';
+  print render($page_callback_result);
+  print '</body></html>';
+
+  drupal_page_footer();
+}
+
