@@ -1,0 +1,4 @@
+name = Menu routing
+core = 7.x
+packages = Menu
+files[] = menu_routing.module

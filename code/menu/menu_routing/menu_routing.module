@@ -61,6 +61,7 @@ function menu_routing_menu(){// arg/origin/destination
     'theme arguments' => array('admin_theme'),//Example system -menu - admin
     #12
     'file' => 'example.inc',
+    'file path' => drupal_get_path('module','menu_routing').'examplepath',
 
     'type' => MENU_CALLBACK,
   );
