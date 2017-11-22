@@ -61,10 +61,36 @@ function menu_routing_menu(){// arg/origin/destination
     'theme arguments' => array('admin_theme'),//Example system -menu - admin
     #12
     'file' => 'example.inc',
+
     'file path' => drupal_get_path('module','menu_routing').'examplepath',
+
+
+
 
     'type' => MENU_CALLBACK,
   );
+
+
+  /*
+    %map and %index
+  \\
+
+%map: All elements of the path are converted to a keyed array. This is also a variable reference
+%index: The element of the path the wildcard loader is defined in.
+     */
+   $items['user/%user_category/edit'] = array(
+     'title' => 'Edit',
+     'page callback' => 'user_edit',
+     'page arguments' => array(1),
+     'access callback' => 'user_edit_access',
+     'access arguments' => array(1),
+     'type' => MENU_LOCAL_TASK,
+     'load arguments' => array('%map', '%index'),
+     'file' => 'user.pages.inc',
+   );
+
+
+
   return $items;
 }
 
