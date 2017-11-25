@@ -1,2 +1,18 @@
 <?php
+/**
+ * @file
+ * Form api examples
+ */
 
+/**
+ * Implements hook_menu().
+ */
+function fom_api_menu() {
+  $items['form/api/example/form'] = array(
+    'title' => 'View the sample form',
+    'page callback' => 'drupal_get_form',
+    
+  );
+
+  return $items;
+}
