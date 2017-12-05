@@ -18,3 +18,7 @@ function fom_api_menu() {
 }
 
 function for_api_example_form(){}
+
+
+
+function for_api_elements_info(){}
