@@ -11,8 +11,18 @@ function fom_api_menu() {
   $items['form/api/example/form'] = array(
     'title' => 'View the sample form',
     'page callback' => 'drupal_get_form',
+    'access callback' => true,
 
   );
 
   return $items;
 }
+
+function for_api_example_form(){
+
+  $render_example = array();
+}
+
+
+
+function for_api_elements_info(){}
