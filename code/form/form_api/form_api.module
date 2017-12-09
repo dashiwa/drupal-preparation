@@ -25,4 +25,13 @@ function for_api_example_form(){
 
 
 
-function for_api_elements_info(){}
+function for_api_elements_info(){
+ return array(
+    'new_form_type' => array(
+      '#input' => TRUE,
+      '#tree' => TRUE,
+      '#process' => array('_new_form_type_process'),
+      '#value_callback' => '_new_form_type_value_callback',
+  ));
+
+}
