@@ -19,8 +19,24 @@ function fom_api_menu() {
 }
 
 function for_api_example_form(){
-
+   
   $render_example = array();
+  
+  $fields[$category][$field->name] = array(
+
+  '#type' => 'date', 
+
+  '#title' => check_plain($field->title), 
+
+  '#default_value' => $edit[$field->name], 
+
+  '#description' => _profile_form_explanation($field), 
+
+  '#required' => $field->required
+
+);
+
+return $fields;
 }
 
 
@@ -35,3 +51,4 @@ function for_api_elements_info(){
   ));
 
 }
+
