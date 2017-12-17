@@ -19,10 +19,36 @@ function fom_api_menu() {
 }
 
 function for_api_example_form(){
-
+   
   $render_example = array();
+  
+  $fields[$category][$field->name] = array(
+
+  '#type' => 'date', 
+
+  '#title' => check_plain($field->title), 
+
+  '#default_value' => $edit[$field->name], 
+
+  '#description' => _profile_form_explanation($field), 
+
+  '#required' => $field->required
+
+);
+
+return $fields;
 }
 
 
 
-function for_api_elements_info(){}
+function for_api_elements_info(){
+ return array(
+    'new_form_type' => array(
+      '#input' => TRUE,
+      '#tree' => TRUE,
+      '#process' => array('_new_form_type_process'),
+      '#value_callback' => '_new_form_type_value_callback',
+  ));
+
+}
+
